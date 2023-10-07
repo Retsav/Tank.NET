@@ -320,6 +320,9 @@ GameObject:
   - component: {fileID: 7716889782955791261}
   - component: {fileID: 1570541876015657372}
   - component: {fileID: 3570356069911975056}
+  - component: {fileID: 3827649121831326648}
+  - component: {fileID: 4794166894638760954}
+  - component: {fileID: 6482715883930772999}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -394,6 +397,64 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!50 &3827649121831326648
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7240177640702969200}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 1
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 4
+--- !u!114 &4794166894638760954
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7240177640702969200}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b7efe0ef2c3c954199fd27d0c38287f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputReader: {fileID: 11400000, guid: c35cd21607af6c8499d4dd6b692d4b67, type: 2}
+  bodyTransform: {fileID: 503938589411899955}
+  rb: {fileID: 3827649121831326648}
+  movementSpeed: 6
+  turningRate: 270
+--- !u!114 &6482715883930772999
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7240177640702969200}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85f35d1c43b6d24448272f7c6d039a86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputReader: {fileID: 11400000, guid: c35cd21607af6c8499d4dd6b692d4b67, type: 2}
+  turretTransform: {fileID: 5714620038647125249}
 --- !u!1 &9086706977472269162
 GameObject:
   m_ObjectHideFlags: 0
