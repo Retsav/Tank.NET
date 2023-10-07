@@ -438,7 +438,7 @@ MonoBehaviour:
   inputReader: {fileID: 11400000, guid: c35cd21607af6c8499d4dd6b692d4b67, type: 2}
   bodyTransform: {fileID: 503938589411899955}
   rb: {fileID: 3827649121831326648}
-  movementSpeed: 4
+  movementSpeed: 6
   turningRate: 270
 --- !u!1 &9086706977472269162
 GameObject:
