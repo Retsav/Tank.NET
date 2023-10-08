@@ -136,6 +136,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ClientProjectile
       objectReference: {fileID: 0}
+    - target: {fileID: 4698171725107289196, guid: 6aad0afe151fcb84288e8a3189969b68, type: 3}
+      propertyPath: objectLifeTime
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
