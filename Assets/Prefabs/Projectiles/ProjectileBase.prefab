@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3472636768634839529}
   - component: {fileID: 3139241774682050867}
   - component: {fileID: 4698171725107289196}
-  - component: {fileID: 7885250393440877027}
+  - component: {fileID: 606357870194668934}
   m_Layer: 6
   m_Name: ProjectileBase
   m_TagString: Untagged
@@ -110,7 +110,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectLifeTime: 2
---- !u!114 &7885250393440877027
+--- !u!114 &606357870194668934
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
