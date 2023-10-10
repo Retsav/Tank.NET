@@ -1,18 +1,32 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class ApplicationController : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private ClientSingleton clientPrefab;
+    [SerializeField] private HostSingleton hostPrefab;
+    private async void Start()
     {
-        
+        DontDestroyOnLoad(gameObject);
+        await LaunchInMode(SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Null);
     }
 
-    // Update is called once per frame
-    void Update()
+    private async Task LaunchInMode(bool isDedicatedServer)
     {
-        
+        if (isDedicatedServer)
+        {
+            //dedicated server logic
+        }
+        else
+        {
+            ClientSingleton clientSingleton =Instantiate(clientPrefab);
+            await clientSingleton.CreateClient();
+            HostSingleton hostSingleton = Instantiate(hostPrefab);
+            hostSingleton.CreateHost();
+            //go to main menu
+        }
     }
 }
