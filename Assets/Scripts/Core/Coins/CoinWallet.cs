@@ -17,4 +17,9 @@ public class CoinWallet : NetworkBehaviour
             TotalCoins.Value += coinVal;
         }
     }
+
+    public void SpendCoins(int coins)
+    {
+        TotalCoins.Value -= coins;
+    }
 }
