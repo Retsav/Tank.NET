@@ -62,7 +62,7 @@ public class HostGameManager
                 }
             };
             Lobby lobby = await Lobbies.Instance.CreateLobbyAsync(
-                "My Lobby", MaxConnections);
+                "My Lobby", MaxConnections, lobbyOptions);
             lobbyId = lobby.Id;
             HostSingleton.Instance.StartCoroutine(HeartbeatLobby(HeartbeatDelay));
         }
