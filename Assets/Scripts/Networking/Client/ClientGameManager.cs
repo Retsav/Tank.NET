@@ -12,7 +12,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 
-public class ClientGameManager
+public class ClientGameManager : IDisposable
 {
     private const string MenuSceneName = "Menu";
     private JoinAllocation allocation;
@@ -59,5 +59,10 @@ public class ClientGameManager
         NetworkManager.Singleton.NetworkConfig.ConnectionData = payloadBytes;
         
         NetworkManager.Singleton.StartClient();
+    }
+
+    public void Dispose()
+    {
+        networkClient?.Dispose();
     }
 }
