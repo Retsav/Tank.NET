@@ -645,6 +645,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5d82dc28ea1bb045b665a8600b77bb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  serverPrefab: {fileID: 7945835168253945664, guid: a995cfb48a3f07b4a85ddf3df3c82848, type: 3}
   clientPrefab: {fileID: 2025120367703436212, guid: 0e0ec96b8898909449a54f98ccc16e0a, type: 3}
   hostPrefab: {fileID: 5953766471956925798, guid: 64fc0d68bd2e2034f8542785d9437106, type: 3}
 --- !u!4 &1247438142
