@@ -12,7 +12,7 @@ public class NetworkServer : IDisposable
     
     
     private Dictionary<ulong, string> clientIdToAuth = new Dictionary<ulong, string>();
-    private Dictionary<string, UserData> authIdToUserData = new Dictionary<string, UserData>();
+    private Dictionary<string, GameData> authIdToUserData = new Dictionary<string, GameData>();
     
     
     public NetworkServer(NetworkManager networkManager)
@@ -29,10 +29,10 @@ public class NetworkServer : IDisposable
         NetworkManager.ConnectionApprovalResponse response)
     {
         string payload = System.Text.Encoding.UTF8.GetString(request.Payload);
-        UserData userData = JsonUtility.FromJson<UserData>(payload);
+        GameData gameData = JsonUtility.FromJson<GameData>(payload);
         
-        clientIdToAuth[request.ClientNetworkId] = userData.userAuthId;
-        authIdToUserData[userData.userAuthId] = userData;
+        clientIdToAuth[request.ClientNetworkId] = gameData.userAuthId;
+        authIdToUserData[gameData.userAuthId] = gameData;
         
         response.Approved = true;
         response.Position = SpawnPoint.GetRandomSpawnPos();
@@ -54,11 +54,11 @@ public class NetworkServer : IDisposable
         }
     }
 
-    public UserData GetUserDataByClientID(ulong clientId)
+    public GameData GetUserDataByClientID(ulong clientId)
     {
         if (!clientIdToAuth.TryGetValue(clientId, out string authId))
             return null;
-        if (!authIdToUserData.TryGetValue(authId, out UserData userData))
+        if (!authIdToUserData.TryGetValue(authId, out GameData userData))
             return null;
         return userData;
     }
