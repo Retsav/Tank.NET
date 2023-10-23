@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class ApplicationController : MonoBehaviour
 {
+    [SerializeField] private ServerSingleton serverPrefab;
     [SerializeField] private ClientSingleton clientPrefab;
     [SerializeField] private HostSingleton hostPrefab;
     private async void Start()
@@ -15,7 +16,9 @@ public class ApplicationController : MonoBehaviour
     {
         if (isDedicatedServer)
         {
-            //dedicated server logic
+            ServerSingleton serverSingleton = Instantiate(serverPrefab);
+            await serverSingleton.CreateServer();
+            await serverSingleton.GameManager.StartGameServerAsync();
         }
         else
         {
