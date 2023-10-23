@@ -11,6 +11,10 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private TMP_Text findMatchButtonText;
 
 
+    private bool isMatchmaking;
+    private bool isCancelling;
+
+
     private void Start()
     {
         if (ClientSingleton.Instance == null) return;
@@ -19,6 +23,26 @@ public class MainMenu : MonoBehaviour
         queueTimeText.text = string.Empty;
     }
 
+    public async void FindMatchPressed()
+    {
+        if (isCancelling) return;
+        if (isMatchmaking)
+        {
+            isCancelling = true;
+            queueStatusText.text = "Cancelling...";
+            //Cancel matchmaking
+            isCancelling = false;
+            isMatchmaking = false;
+            findMatchButtonText.text = "Find Match";
+            queueStatusText.text = string.Empty;
+            return;
+        }
+        //start queue
+        findMatchButtonText.text = "Cancel";
+        queueStatusText.text = "Searching...";
+        isMatchmaking = true;
+    }
+    
     public async void StartHost()
     {
         await HostSingleton.Instance.GameManager.StartHostAsync();
