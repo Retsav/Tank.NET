@@ -57,11 +57,33 @@ public class ClientGameManager : IDisposable
         UnityTransport transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
         RelayServerData relayServerData = new RelayServerData(allocation, "dtls");
         transport.SetRelayServerData(relayServerData);
+        ConnectClient();
+    }
+
+    private void ConnectClient()
+    {
+
         string payload = JsonUtility.ToJson(userData);
         byte[] payloadBytes = Encoding.UTF8.GetBytes(payload);
         NetworkManager.Singleton.NetworkConfig.ConnectionData = payloadBytes;
-        
         NetworkManager.Singleton.StartClient();
+    }
+
+    public void StartClient(string ip, int port)
+    {
+        UnityTransport transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
+        transport.SetConnectionData(ip, (ushort)port);
+        ConnectClient();
+    }
+
+    public async void MatchmakeAsync(Action<MatchmakerPollingResult> onMatchmakeResponse) 
+    {
+        if (matchmaker.IsMatchmaking)
+        {
+            return;
+        }
+        MatchmakerPollingResult matchResult = await GetMatchAsync();
+        onMatchmakeResponse?.Invoke(matchResult);
     }
 
     private async Task<MatchmakerPollingResult> GetMatchAsync()
@@ -69,11 +91,14 @@ public class ClientGameManager : IDisposable
         MatchmakingResult matchmakingResult = await matchmaker.Matchmake(userData);
         if (matchmakingResult.result == MatchmakerPollingResult.Success)
         {
-            //Connect to server
+            StartClient(matchmakingResult.ip, matchmakingResult.port);
         }
         return matchmakingResult.result;
     }
-
+    public async Task CancelMatchMaking()
+    {
+        await matchmaker.CancelMatchmaking();
+    }
     
     public void Disconnect()
     {
@@ -83,5 +108,4 @@ public class ClientGameManager : IDisposable
     {
         networkClient?.Dispose();
     }
-
 }
