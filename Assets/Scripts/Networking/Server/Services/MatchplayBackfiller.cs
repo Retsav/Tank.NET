@@ -56,7 +56,7 @@ public class MatchplayBackfiller : IDisposable
         BackfillLoop();
     }
 
-    public void AddPlayerToMatch(GameData gameData)
+    public void AddPlayerToMatch(UserData userData)
     {
         if (!IsBackfilling)
         {
@@ -64,16 +64,16 @@ public class MatchplayBackfiller : IDisposable
             return;
         }
 
-        if (GetPlayerById(gameData.userAuthId) != null)
+        if (GetPlayerById(userData.userAuthId) != null)
         {
             Debug.LogWarningFormat("User: {0} - {1} already in Match. Ignoring add.",
-                gameData.userName,
-                gameData.userAuthId);
+                userData.userName,
+                userData.userAuthId);
                 
             return;
         }
 
-        Player matchmakerPlayer = new Player(gameData.userAuthId, gameData.userGamePreferences);
+        Player matchmakerPlayer = new Player(userData.userAuthId, userData.userGamePreferences);
 
         MatchProperties.Players.Add(matchmakerPlayer);
         MatchProperties.Teams[0].PlayerIds.Add(matchmakerPlayer.Id);
