@@ -9,6 +9,8 @@ using UnityEngine;
 public class NetworkServer : IDisposable
 {
     private NetworkManager networkManager;
+    public Action<UserData> OnUserJoined;
+    public Action<UserData> OnUserLeft;
     public Action<string> OnClientLeft;
     
     
@@ -39,6 +41,7 @@ public class NetworkServer : IDisposable
         
         clientIdToAuth[request.ClientNetworkId] = userData.userAuthId;
         authIdToUserData[userData.userAuthId] = userData;
+        OnUserJoined?.Invoke(userData);
         
         response.Approved = true;
         response.Position = SpawnPoint.GetRandomSpawnPos();
@@ -55,6 +58,7 @@ public class NetworkServer : IDisposable
         if (clientIdToAuth.TryGetValue(clientId, out string authId))
         {
             clientIdToAuth.Remove(clientId);
+            OnUserLeft?.Invoke(authIdToUserData[authId]);
             authIdToUserData.Remove(authId);
             OnClientLeft?.Invoke(authId);
         }
