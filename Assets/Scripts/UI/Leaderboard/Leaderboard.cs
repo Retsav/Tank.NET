@@ -70,6 +70,7 @@ public class Leaderboard : NetworkBehaviour
 
     private void HandleLeaderboardEntitiesChanged(NetworkListEvent<LeaderboardEntityState> changeevent)
     {
+        if (!gameObject.scene.isLoaded) return;
         switch (changeevent.Type)
         {
             case NetworkListEvent<LeaderboardEntityState>.EventType.Add:
