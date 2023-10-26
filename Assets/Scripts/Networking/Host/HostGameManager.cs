@@ -19,12 +19,17 @@ public class HostGameManager : IDisposable
     private Allocation allocation;
     private string joinCode;
     private string lobbyId;
+    private NetworkObject playerPrefab;
     public NetworkServer NetworkServer { get; private set; }
     
     private const int MaxConnections = 20;
     private const int HeartbeatDelay = 15;
     private const string GameSceneName = "Game";
 
+    public HostGameManager(NetworkObject playerPrefab)
+    {
+        this.playerPrefab = playerPrefab;
+    }
     
     public async Task StartHostAsync()
     {
@@ -76,7 +81,7 @@ public class HostGameManager : IDisposable
             return;
         }
 
-        NetworkServer = new NetworkServer(NetworkManager.Singleton);
+        NetworkServer = new NetworkServer(NetworkManager.Singleton, playerPrefab);
         UserData userData = new UserData
         {
             userName = PlayerPrefs.GetString(NameSelector.PlayerNameKey, "Missing Name"),
@@ -107,19 +112,17 @@ public class HostGameManager : IDisposable
 
     public async void Shutdown()
     {
+        if (string.IsNullOrEmpty(lobbyId)) return;
         HostSingleton.Instance.StopCoroutine(nameof(HeartbeatLobby));
-        if (!string.IsNullOrEmpty(lobbyId))
-        {
-            try
-            {
-                await Lobbies.Instance.DeleteLobbyAsync(lobbyId);
-            }
-            catch(LobbyServiceException e)
-            {
-                Debug.LogError(e);
-            }
-            lobbyId = string.Empty;
+        try
+        { 
+            await Lobbies.Instance.DeleteLobbyAsync(lobbyId);
         }
+        catch(LobbyServiceException e)
+        {
+            Debug.LogError(e);
+        }
+        lobbyId = string.Empty;
         NetworkServer.OnClientLeft -= HandleClientLeft;
         NetworkServer?.Dispose();
     }
