@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Unity.Mathematics;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
@@ -8,6 +9,7 @@ using UnityEngine;
 
 public class NetworkServer : IDisposable
 {
+    private NetworkObject playerPrefab;
     private NetworkManager networkManager;
     public Action<UserData> OnUserJoined;
     public Action<UserData> OnUserLeft;
@@ -16,11 +18,14 @@ public class NetworkServer : IDisposable
     
     private Dictionary<ulong, string> clientIdToAuth = new Dictionary<ulong, string>();
     private Dictionary<string, UserData> authIdToUserData = new Dictionary<string, UserData>();
+
+    private const int PlayerSpawnDelay = 1000;
     
     
-    public NetworkServer(NetworkManager networkManager)
+    public NetworkServer(NetworkManager networkManager, NetworkObject playerPrefab)
     {
         this.networkManager = networkManager;
+        this.playerPrefab = playerPrefab;
         networkManager.ConnectionApprovalCallback += ApprovalCheck;
         networkManager.OnServerStarted += OnNetworkReady;
     }
@@ -42,11 +47,20 @@ public class NetworkServer : IDisposable
         clientIdToAuth[request.ClientNetworkId] = userData.userAuthId;
         authIdToUserData[userData.userAuthId] = userData;
         OnUserJoined?.Invoke(userData);
-        
+        _ = SpawnPlayerDelayed(request.ClientNetworkId);
         response.Approved = true;
         response.Position = SpawnPoint.GetRandomSpawnPos();
         response.Rotation = Quaternion.identity;
-        response.CreatePlayerObject = true;
+        response.CreatePlayerObject = false;
+    }
+
+    private async Task SpawnPlayerDelayed(ulong clientId)
+    {
+        await Task.Delay(PlayerSpawnDelay);
+        NetworkObject playerInstance = 
+            GameObject.Instantiate(playerPrefab, SpawnPoint.GetRandomSpawnPos(), Quaternion.identity);
+        playerInstance.SpawnAsPlayerObject(clientId);
+        
     }
     
     private void OnNetworkReady()

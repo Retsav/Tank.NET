@@ -23,14 +23,13 @@ public class ServerGameManager : IDisposable
     private MatchplayBackfiller backfiller;
     public NetworkServer NetworkServer { get; private set; }
     private MultiplayAllocationService multiplayAllocationService;
-    private const string GameSceneName = "Game";
     
-    public ServerGameManager(string serverIP, int serverPort, int serverQPort, NetworkManager manager)
+    public ServerGameManager(string serverIP, int serverPort, int serverQPort, NetworkManager manager, NetworkObject playerPrefab)
     {
         this.serverIP = serverIP;
         this.serverPort = serverPort;
         this.queryPort = serverQPort;
-        NetworkServer = new NetworkServer(manager);
+        NetworkServer = new NetworkServer(manager, playerPrefab);
         multiplayAllocationService = new MultiplayAllocationService();
     }
 
@@ -60,7 +59,6 @@ public class ServerGameManager : IDisposable
             Debug.LogError("NetworkServer did not start as expected.");
             return;
         }
-        NetworkManager.Singleton.SceneManager.LoadScene(GameSceneName , LoadSceneMode.Single);
     }
 
     private async Task StartBackfill(MatchmakingResults payload)
