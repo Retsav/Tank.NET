@@ -9,11 +9,13 @@ using UnityEngine;
 public class NetworkServer : IDisposable
 {
     private NetworkManager networkManager;
+    public Action<UserData> OnUserJoined;
+    public Action<UserData> OnUserLeft;
     public Action<string> OnClientLeft;
     
     
     private Dictionary<ulong, string> clientIdToAuth = new Dictionary<ulong, string>();
-    private Dictionary<string, GameData> authIdToUserData = new Dictionary<string, GameData>();
+    private Dictionary<string, UserData> authIdToUserData = new Dictionary<string, UserData>();
     
     
     public NetworkServer(NetworkManager networkManager)
@@ -35,10 +37,11 @@ public class NetworkServer : IDisposable
         NetworkManager.ConnectionApprovalResponse response)
     {
         string payload = System.Text.Encoding.UTF8.GetString(request.Payload);
-        GameData gameData = JsonUtility.FromJson<GameData>(payload);
+        UserData userData = JsonUtility.FromJson<UserData>(payload);
         
-        clientIdToAuth[request.ClientNetworkId] = gameData.userAuthId;
-        authIdToUserData[gameData.userAuthId] = gameData;
+        clientIdToAuth[request.ClientNetworkId] = userData.userAuthId;
+        authIdToUserData[userData.userAuthId] = userData;
+        OnUserJoined?.Invoke(userData);
         
         response.Approved = true;
         response.Position = SpawnPoint.GetRandomSpawnPos();
@@ -55,16 +58,17 @@ public class NetworkServer : IDisposable
         if (clientIdToAuth.TryGetValue(clientId, out string authId))
         {
             clientIdToAuth.Remove(clientId);
+            OnUserLeft?.Invoke(authIdToUserData[authId]);
             authIdToUserData.Remove(authId);
             OnClientLeft?.Invoke(authId);
         }
     }
 
-    public GameData GetUserDataByClientID(ulong clientId)
+    public UserData GetUserDataByClientID(ulong clientId)
     {
         if (!clientIdToAuth.TryGetValue(clientId, out string authId))
             return null;
-        if (!authIdToUserData.TryGetValue(authId, out GameData userData))
+        if (!authIdToUserData.TryGetValue(authId, out UserData userData))
             return null;
         return userData;
     }

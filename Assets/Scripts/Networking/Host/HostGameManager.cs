@@ -77,12 +77,12 @@ public class HostGameManager : IDisposable
         }
 
         NetworkServer = new NetworkServer(NetworkManager.Singleton);
-        GameData gameData = new GameData
+        UserData userData = new UserData
         {
             userName = PlayerPrefs.GetString(NameSelector.PlayerNameKey, "Missing Name"),
             userAuthId = AuthenticationService.Instance.PlayerId
         };
-        string payload = JsonUtility.ToJson(gameData);
+        string payload = JsonUtility.ToJson(userData);
         byte[] payloadBytes = Encoding.UTF8.GetBytes(payload);
         NetworkManager.Singleton.NetworkConfig.ConnectionData = payloadBytes;
         NetworkManager.Singleton.StartHost();
@@ -107,19 +107,17 @@ public class HostGameManager : IDisposable
 
     public async void Shutdown()
     {
+        if (string.IsNullOrEmpty(lobbyId)) return;
         HostSingleton.Instance.StopCoroutine(nameof(HeartbeatLobby));
-        if (!string.IsNullOrEmpty(lobbyId))
-        {
-            try
-            {
-                await Lobbies.Instance.DeleteLobbyAsync(lobbyId);
-            }
-            catch(LobbyServiceException e)
-            {
-                Debug.LogError(e);
-            }
-            lobbyId = string.Empty;
+        try
+        { 
+            await Lobbies.Instance.DeleteLobbyAsync(lobbyId);
         }
+        catch(LobbyServiceException e)
+        {
+            Debug.LogError(e);
+        }
+        lobbyId = string.Empty;
         NetworkServer.OnClientLeft -= HandleClientLeft;
         NetworkServer?.Dispose();
     }
