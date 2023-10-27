@@ -17,11 +17,12 @@ using UnityEngine.SceneManagement;
 public class HostGameManager : IDisposable
 {
     private Allocation allocation;
-    private string joinCode;
+    
     private string lobbyId;
     private NetworkObject playerPrefab;
     private MainMenu mainMenu;
     public NetworkServer NetworkServer { get; private set; }
+    public string JoinCode { get; private set; }
     
     private const int MaxConnections = 20;
     private const int HeartbeatDelay = 15;
@@ -46,8 +47,8 @@ public class HostGameManager : IDisposable
         }
         try
         {
-            joinCode = await Relay.Instance.GetJoinCodeAsync(allocation.AllocationId);
-            Debug.Log(joinCode);
+            JoinCode = await Relay.Instance.GetJoinCodeAsync(allocation.AllocationId);
+            Debug.Log(JoinCode);
         }
         catch(Exception e)
         {
@@ -67,7 +68,7 @@ public class HostGameManager : IDisposable
                 {
                     "JoinCode", new DataObject(
                             visibility: DataObject.VisibilityOptions.Member,
-                            value: joinCode
+                            value: JoinCode
                         )
                 }
             };
